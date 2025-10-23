@@ -1,0 +1,67 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFrameworks>net6.0;net472</TargetFrameworks>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+        <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+        <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+        <SuppressTfmSupportBuildErrors>true</SuppressTfmSupportBuildErrors>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Lib.Harmony" Version="1.2.0.1" />
+        <PackageReference Include="MonoMod.Utils" Version="22.7.31.1" />
+        <PackageReference Include="MonoMod.RuntimeDetour" Version="22.7.31.1" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+        <Reference Include="Microsoft.CSharp" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="Xunit" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
+        <PackageReference Include="xunit.v3" Version="3.1.0" />
+    </ItemGroup>
+
+    <Target Name="GenerateLauncherConfig"
+            BeforeTargets="CopyFilesToOutputDirectory"
+            DependsOnTargets="PrepareGenerateLauncherConfig;GenerateLauncherConfigCore" />
+
+    <Target Name="PrepareGenerateLauncherConfig">
+        <PropertyGroup Condition="'$(OS)' != 'Windows_NT' AND '$(TargetFrameworkIdentifier)' == '.NETFramework'">
+            <LauncherConfig><![CDATA[
+{
+  "program": "mono",
+  "args": [
+    "$(AssemblyName).exe",
+    "--server"
+  ]
+}
+            ]]></LauncherConfig>
+        </PropertyGroup>
+    </Target>
+
+    <Target Name="GenerateLauncherConfigCore"
+            Condition="'$(LauncherConfig)' != ''"
+            Outputs="$(LauncherConfigFile)">
+        <PropertyGroup>
+            <LauncherConfigFile>$(TargetDir)$(AssemblyName).launcher.config.json</LauncherConfigFile>
+        </PropertyGroup>
+
+        <WriteLinesToFile
+            File="$(LauncherConfigFile)"
+            Lines="$([MSBuild]::Escape($(LauncherConfig)))"
+            Overwrite="true"
+            WriteOnlyWhenDifferent="true" />
+
+        <ItemGroup>
+            <Compile Include="$(LauncherConfigFile)" />
+            <FileWrites Include="$(LauncherConfigFile)" />
+        </ItemGroup>
+    </Target>
+</Project>

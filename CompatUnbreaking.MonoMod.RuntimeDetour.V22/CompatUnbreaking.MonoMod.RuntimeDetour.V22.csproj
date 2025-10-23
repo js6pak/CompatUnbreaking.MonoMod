@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <!--        <TargetFrameworks>net9.0;net5.0;netstandard2.0;net452;net35</TargetFrameworks>-->
+        <TargetFramework>net9.0</TargetFramework>
+        <RootNamespace>MonoMod.RuntimeDetour</RootNamespace>
+        <LangVersion>preview</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+        <ShimTargetAssemblyName>MonoMod.RuntimeDetour</ShimTargetAssemblyName>
+        <ShimBaselineProject>..\CompatUnbreaking.MonoMod.Tests\CompatUnbreaking.MonoMod.Tests.csproj</ShimBaselineProject>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Using Include="CompatUnbreaker.Attributes" />
+
+        <AssemblyAttribute Include="CompatUnbreaker.Attributes.UnbreakerShimAttribute">
+            <_Parameter1>$(ShimTargetAssemblyName)</_Parameter1>
+        </AssemblyAttribute>
+
+        <PackageReference Include="CompatUnbreaker.Attributes" Version="0.1.0-dev" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MonoMod.RuntimeDetour" Version="25.3.1" />
+    </ItemGroup>
+</Project>

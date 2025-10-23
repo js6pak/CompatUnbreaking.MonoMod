@@ -1,0 +1,5 @@
+<Project>
+    <ItemGroup>
+        <Using Remove="System.Threading.Tasks" Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework' AND $([MSBuild]::VersionLessThan('$(TargetFrameworkVersion)', '4.0'))" />
+    </ItemGroup>
+</Project>

@@ -1,0 +1,5 @@
+[*.cs]
+dotnet_style_namespace_match_folder=false
+resharper_check_namespace_highlighting=none
+
+dotnet_diagnostic.SA1649.severity = none
